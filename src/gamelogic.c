@@ -52,13 +52,13 @@ uint8_t translator(uint8_t point){
     return 0;
 }
 
-void render(const uint8_t data[][64], uint8_t img[]){
+void render(const uint8_t level[][64], uint8_t img[]){
     int i, j;
     uint8_t point_data;
 
     for(i = 0; i < 16; i++){
         for(j = 0; j < 64; j++){
-            uint8_t point = data[i][j];
+            uint8_t point = level[i][j];
             point_data = translator(point);
             if(i%4 == 0) {img[j*2+(128*(i/4))] = point_data; img[j*2+(128*(i/4))+1] = point_data;}
             else{

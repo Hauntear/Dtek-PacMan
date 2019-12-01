@@ -54,7 +54,7 @@ int getbtns(void);
 int getsw(void);
 void enable_interrupt(void);
 
-void render(const uint8_t data[][64], uint8_t img[]);
+void render(const uint8_t level[][64], uint8_t img[]);
 extern const uint8_t const level_1[16][64];
 void display_screen(uint8_t *data);
 
