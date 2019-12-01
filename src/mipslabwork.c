@@ -32,9 +32,9 @@ void user_isr( void ){
   }
   if(timeoutcount==10){
     timeoutcount = 0;
-    time2string(textstring, mytime);
-    display_string(3, textstring);
-    display_update();
+    uint8_t img[512];
+    render(level_1, img);
+    display_screen(img);
     tick(&mytime);
   }
 }
@@ -54,7 +54,5 @@ void labinit( void ){
 
 /* This function is called repetitively from the main program */
 void labwork( void ){ 
-  prime = nextprime(prime);
-  display_string(0, itoaconv(prime));
-  display_update();
+
 }
