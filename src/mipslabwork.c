@@ -14,11 +14,17 @@
 #include <pic32mx.h>  /* Declarations of system-specific addresses etc */
 #include "mipslab.h"  /* Declatations for these labs */
 
-int mytime = 0x5957;
-int prime = 1234567;
 int timeoutcount = 0;
 
-char textstring[] = "text, more text, and even more text!";
+struct Pacman{
+    int x_pos[2];
+    int y_pos[2];
+    int facing;
+    int x_mov;
+    int y_mov; 
+};
+
+struct Pacman pc = {{31, 32}, {10, 11}, 0, 0, 0};
 
 /* Interrupt Service Routine */
 void user_isr( void ){
@@ -26,26 +32,33 @@ void user_isr( void ){
     IFS(0) &= ~0x8000;
     PORTE++;
   }
-  if(IFS(0)&0x100) {
+  go_left(&pc);
+  go_right(&pc);
+  go_down(&pc);
+  go_up(&pc);
+  if(IFS(0)&0x100){
     IFS(0) &= ~0x100;
     timeoutcount++;
   }
-  if(timeoutcount==10){
+  if(timeoutcount==2){
     timeoutcount = 0;
+    move(level_1, &pc);
     uint8_t img[512];
-    render(level_1, img);
+    render(level_1, img, pc);
     display_screen(img);
-    tick(&mytime);
   }
 }
 
 /* Lab-specific initialization goes here */
 void labinit( void ){
+  //Init pacboi
+
   T2CON = 0x0;
   PR2 = 0x0;
   T2CON = 0x8070;
   PR2 = 31250;
-  TRISE = ~0xFF;
+  TRISD |= 0xE0;
+  TRISF |= 0x2;
   IEC(0) |= 0x8100; // turn on T2IE to enable T2, and  interrupts
   IPC(3) = 0x1f000000; //set max priority and subpriority for SW3 interrupts
   IPC(2) = 0x1F;  // set max priority and subpriority for T2 interrupts

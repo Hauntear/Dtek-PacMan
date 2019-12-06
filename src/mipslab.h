@@ -54,7 +54,10 @@ int getbtns(void);
 int getsw(void);
 void enable_interrupt(void);
 
-void render(const uint8_t level[][64], uint8_t img[]);
+struct Pacman;
+void move(const uint8_t level[][64], struct Pacman* pc);
+void render(const uint8_t level[][64], uint8_t img[], struct Pacman pc);
 extern const uint8_t const level_1[16][64];
 void display_screen(uint8_t *data);
+
 
