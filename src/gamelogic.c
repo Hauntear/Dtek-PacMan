@@ -27,7 +27,7 @@ struct Ghost{
     int y_mov;
 };
 
-struct Ghost gh1 = {25, }
+struct Ghost gh1 = {25, };
 
 
 uint8_t translator(uint8_t point){
@@ -68,7 +68,7 @@ void move(const uint8_t level[][64]){
     }
 }
 
-void tick(const uint8_t level[][64]){
+void tickgame(const uint8_t level[][64]){
     move(level);
     uint8_t img[512];
     render(level_1, img);
