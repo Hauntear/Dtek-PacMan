@@ -16,15 +16,6 @@
 
 int timeoutcount = 0;
 
-struct Pacman{
-    int x_pos[2];
-    int y_pos[2];
-    int facing;
-    int x_mov;
-    int y_mov; 
-};
-
-struct Pacman pc = {{31, 32}, {10, 11}, 0, 0, 0};
 
 /* Interrupt Service Routine */
 void user_isr( void ){
@@ -32,20 +23,14 @@ void user_isr( void ){
     IFS(0) &= ~0x8000;
     PORTE++;
   }
-  go_left(&pc);
-  go_right(&pc);
-  go_down(&pc);
-  go_up(&pc);
+  direction();
   if(IFS(0)&0x100){
     IFS(0) &= ~0x100;
     timeoutcount++;
   }
   if(timeoutcount==2){
     timeoutcount = 0;
-    move(level_1, &pc);
-    uint8_t img[512];
-    render(level_1, img, pc);
-    display_screen(img);
+    tick(level_1);
   }
 }
 

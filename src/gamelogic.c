@@ -8,6 +8,7 @@ Game logic goes here.
 #include "mipslab.h"
 
 
+
 struct Pacman{
     int x_pos[2];
     int y_pos[2];
@@ -15,6 +16,18 @@ struct Pacman{
     int x_mov;
     int y_mov; 
 };
+
+struct Pacman pc = {{31, 32}, {10, 11}, 0, 0, 0};
+
+struct Ghost{
+    int x_pos;
+    int y_pos;
+    int facing;
+    int x_mov;
+    int y_mov;
+};
+
+struct Ghost gh1 = {25, }
 
 
 uint8_t translator(uint8_t point){
@@ -27,41 +40,39 @@ uint8_t translator(uint8_t point){
     return 0;
 }
 
-void go_left(struct Pacman* pc){
-    if(PORTD&0x80){
-        pc->y_mov = 0;
-        pc->x_mov = -1;
+void direction(){
+    if(PORTD&0x80){ //Left BTN4
+        pc.y_mov = 0;
+        pc.x_mov = -1;
+    }
+    if(PORTD&0x40){ //Right BTN3
+        pc.y_mov = 0;
+        pc.x_mov = 1;
+    }
+    if(PORTD&0x20){ //Down BTN2
+        pc.y_mov = 1;
+        pc.x_mov = 0;
+    }
+    if(PORTF&0x2){ //Up BTN1
+        pc.y_mov = -1;
+        pc.x_mov = 0;
     }
 }
 
-void go_right(struct Pacman* pc){
-    if(PORTD&0x40){
-        pc->y_mov = 0;
-        pc->x_mov = 1;
+void move(const uint8_t level[][64]){
+    if(bound_check(pc, level)){
+        pc.x_pos[0] += pc.x_mov;
+        pc.x_pos[1] += pc.x_mov;
+        pc.y_pos[0] += pc.y_mov;
+        pc.y_pos[1] += pc.y_mov;
     }
 }
 
-void go_down(struct Pacman* pc){
-    if(PORTD&0x20){
-        pc->y_mov = 1;
-        pc->x_mov = 0;
-    }
-}
-
-void go_up(struct Pacman* pc){
-    if(PORTF&0x2){
-        pc->y_mov = -1;
-        pc->x_mov = 0;
-    }
-}
-
-void move(const uint8_t level[][64], struct Pacman* pc){
-    if(bound_check(*pc, level)){
-        pc->x_pos[0] += pc->x_mov;
-        pc->x_pos[1] += pc->x_mov;
-        pc->y_pos[0] += pc->y_mov;
-        pc->y_pos[1] += pc->y_mov;
-    }
+void tick(const uint8_t level[][64]){
+    move(level);
+    uint8_t img[512];
+    render(level_1, img);
+    display_screen(img);
 }
 
 int bound_check(struct Pacman pc, const uint8_t level[][64]){
@@ -74,7 +85,7 @@ int bound_check(struct Pacman pc, const uint8_t level[][64]){
 }
 
 
-void render(const uint8_t level[][64], uint8_t img[], struct Pacman pc){
+void render(const uint8_t level[][64], uint8_t img[]){
     int i, j;
     uint8_t point_data;
 
