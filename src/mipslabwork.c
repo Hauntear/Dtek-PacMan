@@ -30,7 +30,7 @@ void user_isr( void ){
   }
   if(timeoutcount==2){
     timeoutcount = 0;
-    tickgame(level_1);
+    tickgame(level_1, candy_1);
   }
 }
 

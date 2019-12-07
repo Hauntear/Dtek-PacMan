@@ -56,8 +56,9 @@ void enable_interrupt(void);
 
 struct Pacman;
 void move(const uint8_t level[][64]);
-void render(const uint8_t level[][64], uint8_t img[]);
+void render(const uint8_t level[][64], uint8_t img[], uint8_t candy[][64]);
 extern const uint8_t const level_1[16][64];
+extern uint8_t candy_1[16][64];
 void display_screen(uint8_t *data);
 
 

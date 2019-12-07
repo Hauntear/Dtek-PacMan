@@ -7,7 +7,8 @@ Game logic goes here.
 #include <pic32mx.h>
 #include "mipslab.h"
 
-
+int candiesYeeted = 0;
+int amtCandies = 112;
 
 struct Pacman{
     int x_pos[2];
@@ -68,10 +69,26 @@ void move(const uint8_t level[][64]){
     }
 }
 
-void tickgame(const uint8_t level[][64]){
+void progress(uint8_t img[]) {
+    int pro = (38*candiesYeeted/amtCandies);
+    int i = 0;
+    for (i; i< pro; i++) {
+        img[22*2+128+i+1] -= (0x1<<(7));
+        img[22*2+(128*2)+i+1] -= (0x1);
+    }
+}
+
+void eat(struct Pacman pc, uint8_t candy[][64]);
+
+void tickgame(const uint8_t level[][64], uint8_t candy[][64]){
     move(level);
+    eat(pc, candy);
     uint8_t img[512];
-    render(level_1, img);
+    render(level, img, candy);
+    progress(img);
+    if (candiesYeeted == 94) {
+        
+    }
     display_screen(img);
 }
 
@@ -84,8 +101,26 @@ int bound_check(struct Pacman pc, const uint8_t level[][64]){
     }
 }
 
+void eat(struct Pacman pc, uint8_t candy[][64]) {
+    if (candy[pc.y_pos[0]][pc.x_pos[0]] == 2 ||  candy[pc.y_pos[0]][pc.x_pos[0]] == 3) {
+        candy[pc.y_pos[0]][pc.x_pos[0]] = 0;
+        candiesYeeted++;
+    }
+    if (candy[pc.y_pos[1]][pc.x_pos[0]] == 2 || candy[pc.y_pos[1]][pc.x_pos[0]] == 3) {
+        candy[pc.y_pos[1]][pc.x_pos[0]] = 0;
+        candiesYeeted++;
+    }
+    if (candy[pc.y_pos[1]][pc.x_pos[1]] == 2 || candy[pc.y_pos[1]][pc.x_pos[1]] == 3) {
+        candy[pc.y_pos[1]][pc.x_pos[1]] = 0;
+        candiesYeeted++;
+    }
+    if (candy[pc.y_pos[0]][pc.x_pos[1]] == 2 || candy[pc.y_pos[0]][pc.x_pos[1]] == 3) {
+        candy[pc.y_pos[0]][pc.x_pos[1]] = 0;
+        candiesYeeted++;
+    }
+}
 
-void render(const uint8_t level[][64], uint8_t img[]){
+void render(const uint8_t level[][64], uint8_t img[], uint8_t candy[][64]){
     int i, j;
     uint8_t point_data;
 
@@ -106,5 +141,15 @@ void render(const uint8_t level[][64], uint8_t img[]){
     img[pc.x_pos[0]*2+(128*(pc.y_pos[1]/4))+1] -= (0x1<<(2*(pc.y_pos[1]%4)));
     img[pc.x_pos[1]*2+(128*(pc.y_pos[1]/4))] -= (0x1<<(2*(pc.y_pos[1]%4)));
     //img[pc.x_pos[1]*2+(128*(pc.y_pos[0]/4))] -= (0x3<<(2*(pc.y_pos[0]%4)));
-
+    
+    for(i = 0; i < 16; i++){
+        for(j = 0; j < 64; j++){
+            uint8_t point = candy[i][j];
+            if (point == 2) {
+                img[j*2+(128*(i/4))] -= (0x1<<(2*(i%4))+1);
+            } else if (point == 3) {
+                img[j*2+(128*(i/4))] -= (0x1<<(2*(i%4))+2);
+            }
+        }
+    }
 }
