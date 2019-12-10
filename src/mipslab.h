@@ -56,8 +56,23 @@ void enable_interrupt(void);
 
 struct Pacman;
 void move(const uint8_t level[][64]);
-void render(const uint8_t level[][64], uint8_t img[]);
+void render(const uint8_t level[][64], uint8_t candy[][64]);
 extern const uint8_t const level_1[16][64];
+extern const uint8_t const level_2[16][64];
+extern const uint8_t const level_GG[16][64];
+extern const uint8_t const level_OOF[16][64];
+extern const uint8_t const level_EASY[16][64];
+extern const uint8_t const level_HARD[16][64];
+extern const uint8_t const level_MENU[16][64];
+extern const uint8_t const level_MEDIUM[16][64];
+extern const uint8_t const level_GOD[16][64];
+extern const uint8_t const level_ARROWS[16][64];
+extern const uint8_t const level_START[16][64];
+extern const uint8_t const level_1_INTRO[16][64];
+extern const uint8_t const level_2_INTRO[16][64];
+extern uint8_t candy_1[16][64];
+extern uint8_t candy_2[16][64];
 void display_screen(uint8_t *data);
 
+void quicksleep(int cyc);
 
